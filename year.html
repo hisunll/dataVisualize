@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html class="wide wow-animation" lang="en">
+  <head>
+    <title>Year</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>.ie-panel{display: none;background: #212121;padding: 10px 0;box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3);clear: both;text-align:center;position: relative;z-index: 1;} html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel {display: block;}</style>
+  </head>
+
+  <body>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/xlsx/0.11.5/xlsx.core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="http://www.5imoban.net/download/jquery/jquery-1.11.0.min.js"></script>
+    <script src="http://www.5imoban.net/download/jquery/jquery.cookie.min.js"></script>
+    <script>
+      check = 0;
+      obj = JSON.parse(localStorage.getItem("key")); 
+      yearData = new Map();
+      for ([key, value] of Object.entries(obj)) {
+        var team = new Map()
+        for ( [key2, value2] of Object.entries(value)) {
+          team.set(key2,value2)
+        }
+        yearData.set(key,team)
+      }
+    </script>
+    <div class="ie-panel"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div>
+    <div class="preloader">
+      <div class="preloader-body">
+        <div class="cssload-container">
+          <div class="cssload-speeding-wheel"></div>
+        </div>
+        <p>Loading...</p>
+      </div>
+    </div>
+    <div class="page">
+      <header class="section page-header">
+        <!--RD Navbar-->
+        <div class="rd-navbar-wrap">
+          <nav class="rd-navbar rd-navbar-classic" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-static" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-lg-stick-up-offset="46px" data-xl-stick-up-offset="46px" data-xxl-stick-up-offset="46px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
+            <div class="rd-navbar-main-outer">
+              <div class="rd-navbar-main">
+                <!--RD Navbar Panel-->
+                <div class="rd-navbar-panel">
+                  <!--RD Navbar Toggle-->
+                  <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
+                  <!--RD Navbar Brand-->
+                  <div class="rd-navbar-brand">
+                    <!--Brand--><a class="brand" href="index.html"><img class="brand-logo-dark" src="images/logo-default-428x112.png" alt="" width="214" height="56"/><img class="brand-logo-light" src="images/logo-inverse-430x112.png" alt="" width="215" height="56"/></a>
+                  </div>
+                </div>
+                <div class="rd-navbar-main-element">
+                  <div class="rd-navbar-nav-wrap">
+                    <ul class="rd-navbar-nav">
+                      <li class="rd-nav-item">
+                        <a class="rd-nav-link" href="index.html"onclick="as2()">Home</a>
+                        <script>
+                          function as2()
+                          {
+                            window.location.href = 'index.html';
+                          }
+                        </script>
+                      </li>
+                      <li class="rd-nav-item"><a class="rd-nav-link" href="team.html"onclick="as3()">Team</a>
+                        <script>
+                          function as3()
+                          {
+                            window.location.href = 'team.html';
+                          }
+                        </script>
+                      </li>
+                      <li class="rd-nav-item">
+                        <a class="rd-nav-link" href="year.html" onclick="as()">Year</a>
+                        <script>
+                          function as()
+                          {
+                            window.location.href = 'year.html';
+                          }
+                        </script>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </header>
+      <div class="section section-lg bg-secondary">
+        <div class="container">
+          <div class="text-center">
+            <h1>打击数据（年份）</h1>
+            <div class="subtitle-2">请输入需要查看的年份(1965-2015)/div>
+            <body>
+              <script>
+              </script>
+              <input id = "toSearchYear" type ="text" name = "toSearchYear">
+              <input id="toSearch"type="button" value = "搜索">
+              <script>
+                document.onclick = function(){
+                  var obj = event.srcElement;
+                  if (obj.type == "button"){
+                    year = document.getElementById("toSearchYear").value
+                    yearInt=parseInt(year)
+                    if(year <1965 || year > 2015)
+                      alert("输入有误")
+                    else{
+                      ViewTeamBatData(year);
+                      ViewTeamRBI(year);
+                      ViewTeamOtherData(year);
+                      ViewDay(year);
+                    }
+                  }
+                  
+                }
+              </script>
+            </body>
+          </div>
+        </div>
+      </div>
+      <div class="section section-main-bunner context-dark" id="home">
+        <div class="main-bunner-img bg-overlay-1;margin=0;background-color:#000000">
+          <div class="container wide">
+            <div class="row justify-content-left">
+              <div class="col-lg-5">
+                <h1 data-caption-animate="fadeInUp" data-caption-delay="100">安打-打席<br class="br-none"> 散点图</h1>
+                <p class="lead text-custom-blue" data-caption-animate="fadeInUp" data-caption-delay="250"></p>
+                <p class="text-introduce-chartsa-blue">
+                  右图分别按国家联盟和美国联盟使用散点图展现了指定年份MLB运动员的“安打-打席”数据。<br>
+                  若无指定年份，默认显示2015年<br>
+                  通过该图可以球员打率的分布和平均值以及其他信息。<br>
+                  用户可以对图进行放大和数据的选择性展示。<br>
+                </p>
+                <div class="linear-introduce">
+                  <div class="linear-introduce-title"><h2 style="font-size:30px"><br>辅助线</h2></div>
+                </div>
+                <p class="text-linear-introduce">实线：数据线性回归后的结果<br>
+                  虚线：安打与打席的平均值
+                </p>
+                
+              </div>
+              <div class="col-lg-7">
+                <table width="100%" ;height="100%";border="0">
+                  <tr>
+                    <td id="msgg" style="width:100%;vertical-align:top;">
+                        <body style="height: 100%; margin: 0">
+                          <div id="container" style="height:590px; width: 100%; vertical-align:top;"></div>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+                        <script type="text/javascript">
+                          //import Vue from 'vue'
+                          //import * as echarts from 'echarts'
+                          //import * as esStat from 'echarts-stat'
+                          var dom = document.getElementById('container');
+                          var myChart = echarts.init(dom,{
+                            renderer: 'canvas',
+                            useDirtyRect: false
+                          });
+                          echarts.registerTransform(ecStat.transform.regression);
+                          function showHitRate(lgHitData) 
+                          {
+                            var app = {};
+                            var option;
+                            var dataArr = [];
+                            for (let i=0;i<lgHitData.get("AL").length;i++)
+                            {
+                              dataArr.push(lgHitData.get("AL")[i].map(Number));
+                            }
+
+                            var dataArr2 = [];
+                            for (let i=0;i<lgHitData.get("NL").length;i++)
+                            {
+                              dataArr2.push(lgHitData.get("NL")[i].map(Number));
+                            }
+                            option = {
+                              dataset:[
+                                {
+                                  source:
+                                    dataArr
+                                },
+                                {
+                                  source:
+                                    dataArr2
+                                },
+                                {
+                                  transform:
+                                  {
+                                    type: 'ecStat:regression'
+                                  }
+                                },
+                                {
+                                  fromDatasetIndex:1,
+                                  transform:
+                                  {
+                                    type: 'ecStat:regression'
+                                  }
+                                }
+                              ],
+                              title: {
+                                text: 'Player Hit Rate (Year): Hit Num / At Bats',
+                                subtext: 'Data from: 20123112 sll',
+                                left: 'center'
+                              },
+                              grid: {
+                                left: '3%',
+                                right: '7%',
+                                bottom: '7%',
+                                containLabel: true
+                              },
+                              tooltip: {
+                                showDelay: 0,
+                                formatter: function (params) {
+                                  if (params.value.length > 1) {
+                                    return (
+                                      params.seriesName +
+                                      ' :<br/>' +
+                                      params.value[0] +
+                                      'Bats ' +
+                                      params.value[1] +
+                                      'Times '
+                                    );
+                                  } 
+                                  else {
+                                    return (
+                                      params.seriesName +
+                                      ' :<br/>' +
+                                      params.name +
+                                      ' : ' +
+                                      params.value +
+                                      'Times '
+                                    );
+                                  }
+                                },
+                                axisPointer: {
+                                  show: true,
+                                  type: 'cross',
+                                  lineStyle: {
+                                    type: 'dashed',
+                                    width: 1
+                                  }
+                                }
+                              },
+                              toolbox: {
+                                feature: {
+                                  dataZoom: {},
+                                  brush: {
+                                    type: ['rect', 'polygon', 'clear']
+                                  }
+                                }
+                              },
+                              brush: {},
+                              legend: {
+                                bottom: 10
+                              },
+                              xAxis: [
+                                {
+                                  type: 'value',
+                                  scale: true,
+                                  axisLabel: {
+                                    formatter: '{value} Bats'
+                                  },
+                                  splitLine: {
+                                    show: false
+                                  }
+                                }
+                              ],
+                              yAxis: [
+                                {
+                                  type: 'value',
+                                  scale: true,
+                                  axisLabel: {
+                                    formatter: '{value} Times'
+                                  },
+                                  splitLine: {
+                                    show: false
+                                  }
+                                }
+                              ],
+                              series: [
+                                {
+                                  name: 'American League',
+                                  type: 'scatter',
+                                  emphasis: {
+                                    focus: 'series'
+                                  },
+                                  data: lgHitData.get("AL")
+                                },
+                                {
+                                  name: 'AL Regression Line',
+                                  type: 'line',
+                                  emphasis: {
+                                    focus: 'series'
+                                  },
+                                  datasetIndex: 2,
+                                  symbolSize: 0.1,
+                                  symbol: 'circle',
+                                  label: { show: true, fontSize: 10 },
+                                  labelLayout: { dx: -20 },
+                                  encode: { label: 2, tooltip: 1 },
+                                  markLine:{
+                                    data:[
+                                      {type:'average',name:'平均安打（AL）'},
+                                      {type:'average',name:'平均打席（AL）',valueDim:'x'}
+                                    ]
+                                  }
+                                },
+                                {
+                                  name: 'National League',
+                                  type: 'scatter',
+                                  emphasis: {
+                                    focus: 'series'
+                                  },
+                                  // prettier-ignore
+                                  data: lgHitData.get("NL"),
+                                  markLine:{
+                                    data:[
+                                      {type:'average',name:'平均安打（NL）'}
+                                      ,{type:'average',name:'平均打席（NL）',valueDim:'x'}
+                                    ]
+                                  }
+                                },
+                                {
+                                  name: 'NL Regression Line',
+                                  type: 'line',
+                                  datasetIndex:3,
+                                  symbolSize: 0.1,
+                                  symbol: 'circle',
+                                  label: { show: true, fontSize: 10 },
+                                  labelLayout: { dx: -20 },
+                                  encode: { label: 2, tooltip: 1 },
+                                    
+                                }
+                              ]
+                            };
+                            if (option && typeof option === 'object') {
+                              myChart.setOption(option);
+                            }
+                          } 
+                        </script>
+                        <script type="text/javascript">
+                          function ViewDay(year) {
+                            var nianfen = year
+                            var lgSumHR = []
+                            var maxHit = 0;
+                            var lgHitData = new Map();
+                            lgHitData.set("NL", []);
+                            lgHitData.set("AL", [])
+                            for(let [team, batData] of yearData.get(nianfen))
+                            {
+                              for(let i = 0; i < batData.length; i++)
+                              {
+                                var hitNum = batData[i][4];
+                                var atBatNum = batData[i][3];
+                                var teamLg = batData[i][1];
+                                lgHitData.get(teamLg).push([atBatNum, hitNum]);
+                              }
+                            }
+                            showHitRate(lgHitData);
+                            nianfen= undefined;;
+                            lgHitData= undefined;;
+                            hitNum= undefined;;
+                            atBatNum= undefined;;
+                            teamLg= undefined;;
+                          }
+                          ViewDay("2015")
+                        </script>
+                      </body>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="section section section-xl bg-secondary">
+        <div class="container wide">
+          <div class="row row-md-50 row-sm-50">
+            <div class="col-xs-10 col-md-6 col-lg-6">
+              <div class="width:100%  height:100%">
+                <table width="100%" ;height="100%";border="0">
+                  <tr>
+                    <td id="msgg" style="width:100%;vertical-align:top;">
+                      <body style="height: 100%; margin: 0">
+                        <div id="container2" style="height:575px; width: 100%; vertical-align:top"></div>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+                        <script type="text/javascript">
+                          //import Vue from 'vue'
+                          //import * as echarts from 'echarts'
+                          //import * as esStat from 'echarts-stat'
+                          function showTeamBatData(year,teamHitDataShow,maxLHRate,maxHitRate,maxHR,maxS,maxBB,maxSB,minHitRate,minLHRate)
+                          {
+                            var dom = document.getElementById('container2');
+                            var myChart1 = echarts.init(dom,{
+                              renderer: 'canvas',
+                              useDirtyRect: false
+                            });
+                            var app={};
+                            var option;
+                            option = {
+                              title: {
+                                text: 'Team Bat Data',
+                                subtext: '20123112 孙梁梁',
+                                top: 10,
+                                left: 10
+                              },
+                              tooltip: {
+                                trigger: 'item'
+                              },
+                              legend: {
+                                type: 'scroll',
+                                bottom: 10,
+                                data: year
+                              },
+                              visualMap: {
+                                top: 'middle',
+                                right: 10,
+                                color: ['red', 'yellow'],
+                                calculable: true
+                              },
+                              radar: {
+                                indicator: [
+                                  { text: 'LongHit\nRate', max: maxLHRate,min:minLHRate},
+                                  { text: 'Hit\nRate', max: maxHitRate ,min:minHitRate},
+                                  { text: 'HR', max: maxHR,min:20 },
+                                  { text: 'SF+SH', max: maxS },
+                                  { text: 'Bad\nBall', max: maxBB ,min:100},
+                                  { text: 'Steal\nBase', max: maxSB },
+                                ]
+                              },
+                              series: (function () {
+                                var series = [];
+                                for (var i = 1; i <= 28; i++) {
+                                  series.push({
+                                    type: 'radar',
+                                    symbol: 'none',
+                                    lineStyle: {
+                                      width: 0.2
+                                    },
+                                    emphasis: {
+                                      areaStyle: {
+                                        color: 'rgba(0,250,0,0.3)'
+                                      }
+                                    },
+                                    data: teamHitDataShow
+                                  });
+                                }
+                                return series;
+                              })()
+                            };
+                            option && myChart1.setOption(option);
+                          }
+                        </script>
+
+                        <script type="text/javascript">
+                          function ViewTeamBatData(year) {
+                            var nianfen = year;
+                            var TeamNameLH = [];
+                            var maxBB=0,maxHitRate=0,maxLHRate=0,maxHR=0,maxS=0,maxSB=0;
+                            var toShowData = []
+                            var num=0;
+                            for(let [team, batData] of yearData.get(nianfen))
+                            {
+                              TeamNameLH[num]=team+" ";
+                              var teamHitSum=0;
+                              var teamLHSum=0;
+                              var teamHRSum=0;
+                              var teamHitRate=0;
+                              var teamABSum=0;
+                              var teamSSum=0,teamBBSum=0,teamSBSum=0;
+                              var minHitRate = 1;
+                              var minLHRate = 1;
+                              for(let i = 0; i < batData.length; i++)
+                              {
+                                teamHitSum= teamHitSum + parseInt(batData[i][4])
+                                teamLHSum= teamLHSum+ batData[i][5]
+                                teamHRSum= teamHRSum + parseInt(batData[i][6])
+                                teamABSum=teamABSum+parseInt(batData[i][3])
+                                teamSSum = teamSSum  + parseInt(batData[i][11])
+                                teamSBSum= teamSBSum + parseInt(batData[i][8])
+                                teamBBSum= teamBBSum + parseInt(batData[i][9])
+                              }
+                              teamHitRate= teamHitSum/teamABSum
+                              teamLHRate= teamLHSum/teamHitSum
+                              toShowData[num] = {name:team+" ",value:[teamLHRate,teamHitRate,teamHRSum,teamSSum,teamBBSum,teamSBSum]}
+                              maxBB=Math.max(maxBB,teamBBSum)
+                              maxS=Math.max(maxS,teamSSum)
+                              maxSB=Math.max(maxSB,teamSBSum)
+                              maxLHRate=Math.max(maxLHRate,teamLHRate)
+                              maxHitRate=Math.max(maxHitRate,teamHitRate)
+                              minHitRate = Math.min(minHitRate,teamHitRate)
+                              minLHRate = Math.min(minLHRate,teamLHRate)
+                              maxHR=Math.max(maxHR,teamHRSum)
+                              num=num+1;
+                            }
+                            showTeamBatData(TeamNameLH,toShowData,maxLHRate,maxHitRate,maxHR,maxS,maxBB,maxSB,minHitRate*0.8,minLHRate*0.5)
+                          }
+                          ViewTeamBatData("2015")
+                        </script>
+                      </body>
+                    </td>
+                  </tr>
+                </table>
+                <h4 class=" text-center">打击数据雷达图</h4>
+                <div class="box-info-modern-text text-center">该年份各队的各项数据</div>
+                <p class="text-center">包括：打率、长打率、本垒打数、盗垒数、四坏上垒数，牺牲打数</p>
+              </div>
+            </div>
+            <div class="col-xs-10 col-md-6 col-lg-6">
+              <div class="width:100%  height:100%">
+                <table width="100%" ;height="50%";border="0">
+                  <tr>
+                    <td id="msgg" style="width:100%;vertical-align:top;">
+                      <body style="height: 100%; margin: 0">
+                        <div id="container3" style="height:275px; width: 100%; vertical-align:top;"></div>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+                        <script type="text/javascript">
+                          
+                          function showTeamRBI(teamRBI,minRBI,maxRBI)
+                          {
+                            var dom = document.getElementById('container3');
+                            var myChart2 = echarts.init(dom,{
+                              renderer: 'canvas',
+                              useDirtyRect: false
+                            });
+                            var option;
+                            option = {
+                              backgroundColor: '#2c343c',
+                              title: {
+                                text:'team RBI',
+                                subtext: 'Data from: 20123112 sll',
+                                left: 'left',
+                                textStyle: {
+                                  color: '#ccc'
+                                }
+                              },
+                              tooltip: {
+                                trigger: 'item'
+                              },
+                              visualMap: {
+                                show: false,
+                                min: minRBI*0.5,
+                                max: maxRBI*1.3,
+                                inRange: {
+                                  colorLightness: [0, 1]
+                                }
+                              },
+                              series: [
+                                {
+                                  name: 'Access From',
+                                  type: 'pie',
+                                  radius: '55%',
+                                  center: ['50%', '50%'],
+                                  data: teamRBI.sort(function (a, b) {
+                                    return a.value - b.value - minRBI*0.9;
+                                  }),
+                                  roseType: 'radius',
+                                  label: {
+                                    color: 'rgba(255, 255, 255, 0.3)'
+                                  },
+                                  labelLine: {
+                                    lineStyle: {
+                                      color: 'rgba(255, 255, 255, 0.3)'
+                                    },
+                                    smooth: 0.2,
+                                    length: 10,
+                                    length2: 20
+                                  },
+                                  itemStyle: {
+                                    color: '#c23531',
+                                    shadowBlur: 200,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                  },
+                                  animationType: 'scale',
+                                  animationEasing: 'elasticOut',
+                                  animationDelay: function (idx) {
+                                    return Math.random() * 200;
+                                  }
+                                }
+                              ]
+                            };
+                            option && myChart2.setOption(option);
+                          }
+                        </script>
+                        <script type="text/javascript">
+                          function ViewTeamRBI(year) {
+                            nianfen = year;
+                            var teamSumRBI = [];
+                            var teamRBI=[];
+                            var num=0;
+                            var minRBI = 300000;
+                            var maxRBI = 0;
+                            for(let [team, batData] of yearData.get(nianfen))
+                            {
+                              teamSumRBI[num] = 0
+                              for(let i = 0; i < batData.length; i++)
+                              {
+                                teamSumRBI[num] = teamSumRBI[num]+parseInt(batData[i][7])
+                              }
+                              teamRBI[num]={name:team,value:teamSumRBI[num]};
+                              minRBI = Math.min(minRBI,teamSumRBI[num]);
+                              maxRBI = Math.max(maxRBI,teamSumRBI[num])
+                              num=num+1;
+                            }
+                            showTeamRBI(teamRBI,minRBI,maxRBI)
+                          }
+                          ViewTeamRBI("2015")
+                        </script>
+                      </body>
+                    </td>
+                  </tr>
+                </table>
+                <table width="100%" ;height="50%";border="0">
+                  <tr>
+                    <td id="msgg" style="width:100%;vertical-align:top;">
+                      <body style="height: 100%; margin: 0">
+                        <div id="container4" style="height:275px; width: 100%; vertical-align:top;"></div>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+                        <script type="text/javascript">
+                          
+                          function showTeamOtherData(team,teamSumBB,teamSumSB,teamSumS)
+                          {
+                            var dom = document.getElementById('container4');
+                            var myChart3 = echarts.init(dom,{
+                              renderer: 'canvas',
+                              useDirtyRect: false
+                            });
+                            var option;
+                            option = {
+                              title: {
+                                text: '20123112 孙梁梁'
+                              },
+                              axisLabel: {
+                                interval: 0,
+                                rotate: 40
+                              },
+                              tooltip: {
+                                trigger: 'axis'
+                              },
+                              legend: {
+                                data: ['Bad Ball', 'Steal Base', 'Sacrifice']
+                              },
+                              grid: {
+                                left: '3%',
+                                right: '4%',
+                                bottom: '3%',
+                                containLabel: true
+                              },
+                              toolbox: {
+                                feature: {
+                                  saveAsImage: {}
+                                }
+                              },
+                              xAxis: {
+                                type: 'category',
+                                boundaryGap: false,
+                                data: team
+                              },
+                              yAxis: {
+                                type: 'log'
+                              },
+                              series: [
+                                {
+                                  name: 'Bad Ball',
+                                  type: 'line',
+                                  data: teamSumBB
+                                },
+                                {
+                                  name: 'Steal Base',
+                                  type: 'line',
+                                  data: teamSumSB
+                                },
+                                {
+                                  name: 'Sacrifice',
+                                  type: 'line',
+                                  data: teamSumS
+                                }
+                              ]
+                            };
+
+                            option && myChart3.setOption(option);
+
+                          }
+                        </script>
+                        <script type="text/javascript">
+                          function ViewTeamOtherData(year) {
+                            nianfen = year;
+                            var teamSumBB = [];
+                            var teamNameOD=[];
+                            var teamSumS = [];
+                            var teamSumSB = [];
+                            var num=0;
+                            for(let [team, batData] of yearData.get(nianfen))
+                            {
+                              if(yearData.get(nianfen).get(team) == null) continue
+                              teamSumBB[num] = 0;
+                              teamSumSB[num] = 0;
+                              teamSumS[num] = 0;
+                              teamNameOD[num] = team;
+                              for(let i = 0; i < batData.length; i++)
+                              {
+                                teamSumBB[num] = teamSumBB[num]+parseInt(batData[i][9])
+                                teamSumSB[num] = teamSumSB[num]+parseInt(batData[i][8])
+                                teamSumS[num] = teamSumS[num]+parseInt(batData[i][11])
+                              }
+                              num=num+1;
+                            }
+                            showTeamOtherData(teamNameOD,teamSumBB,teamSumSB,teamSumS)
+                          }
+                          ViewTeamOtherData("2015")
+                        </script>
+                      </body>
+                    </td>
+                  </tr>
+                </table>
+                <div class="box-info-modern-text text-center">南丁格尔玫瑰图:各队伍总得点</div>
+                <div class="box-info-modern-text text-center">折线图:各队伍四坏上垒、盗垒、牺牲打总数</div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <div class="snackbars" id="form-output-global"></div>
+    <script src="js/core.min.js"></script>
+    <script src="js/script.js"></script>
+    <!--coded by dyoma-->
+  </body>
+</html>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html class="wide wow-animation" lang="en">
+  <head>
+    <title>Team</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>.ie-panel{display: none;background: #212121;padding: 10px 0;box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3);clear: both;text-align:center;position: relative;z-index: 1;} html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel {display: block;}</style>
+  </head>
+  <body>
+    <script>
+      ALKey = [];
+      NLKey = []
+      obj = JSON.parse(localStorage.getItem("team")); 
+      teamData = new Map();
+      for ([key, value] of Object.entries(obj)) {
+        var check =1;
+        var year = new Map()
+        for ( [key2, value2] of Object.entries(value)) {
+          year.set(key2,value2)
+          var lg = value2[0];
+          if(lg == "AL" && check){
+            ALKey.push(key);
+            check =0;
+          }
+          if(lg == "NL" && check){
+            NLKey.push(key);
+            check = 0;
+          }
+        }
+        teamData.set(key,year)
+      }
+      obj = undefined
+    </script>
+    <script>
+      function objectF() {
+
+          var AL = document.getElementById("American League");
+          for (var i = 0; i < ALKey.length; i++) {
+              var option = new Option(ALKey[i]+" ", ALKey[i]+" ");
+              AL.options[i] = option;
+          }
+          var NL = document.getElementById("National League");
+          for (var i = 0; i < NLKey.length; i++) {
+              var option = new Option(NLKey[i]+" ", NLKey[i]+" ");
+              NL.options[i] = option;
+          }
+      }
+
+      setTimeout(() => {
+          objectF();
+      }, 1000)
+  </script>
+    <div class="ie-panel"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div>
+    <div class="preloader">
+      <div class="preloader-body">
+        <div class="cssload-container">
+          <div class="cssload-speeding-wheel"></div>
+        </div>
+        <p>Loading...</p>
+      </div>
+    </div>
+    <div class="page">
+      <header class="section page-header">
+        <!--RD Navbar-->
+        <div class="rd-navbar-wrap">
+          <nav class="rd-navbar rd-navbar-classic" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-static" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-lg-stick-up-offset="46px" data-xl-stick-up-offset="46px" data-xxl-stick-up-offset="46px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
+            <div class="rd-navbar-main-outer">
+              <div class="rd-navbar-main">
+                <!--RD Navbar Panel-->
+                <div class="rd-navbar-panel">
+                  <!--RD Navbar Toggle-->
+                  <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
+                  <!--RD Navbar Brand-->
+                  <div class="rd-navbar-brand">
+                    <!--Brand--><a class="brand" href="index.html"><img class="brand-logo-dark" src="images/logo-default-428x112.png" alt="" width="214" height="56"/><img class="brand-logo-light" src="images/logo-inverse-430x112.png" alt="" width="215" height="56"/></a>
+                  </div>
+                </div>
+                <div class="rd-navbar-main-element">
+                  <div class="rd-navbar-nav-wrap">
+                    <ul class="rd-navbar-nav">
+                      <li class="rd-nav-item">
+                        <a class="rd-nav-link" href="index.html"onclick="as2()">Home</a>
+                        <script>
+                          function as2()
+                          {
+                            window.location.href = 'index.html';
+                          }
+                        </script>
+                      </li>
+                      <li class="rd-nav-item"><a class="rd-nav-link" href="team.html"onclick="as3()">Team</a>
+                        <script>
+                          function as3()
+                          {
+                            window.location.href = 'team.html';
+                          }
+                        </script>
+                      </li>
+                      <li class="rd-nav-item">
+                        <a class="rd-nav-link" href="year.html" onclick="as()">Year</a>
+                        <script>
+                          function as()
+                          {
+                            window.location.href = 'year.html';
+                          }
+                        </script>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </header>
+      <section class="section-lg bg-secondary">
+        <div class="container wide">
+          <div class="text-center">
+            <h1>打击数据（队伍）</h1>
+          </div>
+          <form style="float: left; position: relative; left: 20%;width: 100px " action="">
+            <select id="American League" onchange="changeData(this)">American League
+            </select>
+          </form>
+          <form style="float: left; position: relative; left: 70%;width: 100px " action="">
+              <select id="National League" onchange="changeData(this)">National League
+              </select>
+          </form>
+          <script>
+            function changeData(obj)
+            {
+              ViewTeams(obj.options[obj.options.selectedIndex].value);
+              ViewGIDP(obj.options[obj.options.selectedIndex].value);
+              ViewDataChange(obj.options[obj.options.selectedIndex].value)
+            }
+          </script>
+        </div>
+      </section>
+      <section >
+        <div class="col-lg-5">
+          <div class="text-center">
+            <h1 font-size = 10px><br></h1>
+          </div>
+        </div>
+      </section>
+      <div class="section section-main-bunner context-dark" id="home">
+        <div class="main-bunner-img bg-overlay-1;margin=0;background-color:#000000;">
+          <div class="container wide">
+            <div class="row justify-content-left">
+              <div class="col-lg-7">
+                <table width="100%" ;height="100%";border="0">
+                  <tr>
+                    <td id="msgg" style="width:100%;vertical-align:top;">
+                        <body style="height: 100%; margin: 0">
+                          <div id="container" style="height:590px; width: 100%; vertical-align:top;"></div>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+                        <script type="text/javascript">
+                          //import Vue from 'vue'
+                          //import * as echarts from 'echarts'
+                          //import * as esStat from 'echarts-stat'
+                          echarts.registerTransform(ecStat.transform.regression);
+                          function showHitRate_RBI(teamHitData,teamSumRBI,toShowYear)
+                          {
+                            var dom = document.getElementById('container');
+                            var myChart = echarts.init(dom, 'dark', {
+                            renderer: 'canvas',
+                            useDirtyRect: false
+                            });
+                            var app = {};
+                            
+                            var option;
+
+                            // prettier-ignore
+                            let timeData = toShowYear;
+                            option = {
+                            title: {
+                                text: 'RBI vs Hit Rate (Team)\n20123112孙梁梁',
+                                left: 'center'
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {
+                                animation: false
+                                }
+                            },
+                            legend: {
+                                data: ['RBI', 'Hit Rate'],
+                                left: 10
+                            },
+                            toolbox: {
+                                feature: {
+                                dataZoom: {
+                                    yAxisIndex: 'none'
+                                },
+                                restore: {},
+                                saveAsImage: {}
+                                }
+                            },
+                            axisPointer: {
+                                link: [
+                                {
+                                    xAxisIndex: 'all'
+                                }
+                                ]
+                            },
+                            dataZoom: [
+                                {
+                                show: true,
+                                realtime: true,
+                                start: 30,
+                                end: 70,
+                                xAxisIndex: [0, 1]
+                                },
+                                {
+                                type: 'inside',
+                                realtime: true,
+                                start: 30,
+                                end: 70,
+                                xAxisIndex: [0, 1]
+                                }
+                            ],
+                            grid: [
+                                {
+                                left: 60,
+                                right: 50,
+                                height: '35%'
+                                },
+                                {
+                                left: 60,
+                                right: 50,
+                                top: '55%',
+                                height: '35%'
+                                }
+                            ],
+                            xAxis: [
+                                {
+                                type: 'category',
+                                boundaryGap: false,
+                                axisLine: { onZero: true },
+                                data: timeData
+                                },
+                                {
+                                gridIndex: 1,
+                                type: 'category',
+                                boundaryGap: false,
+                                axisLine: { onZero: true },
+                                data: timeData,
+                                position: 'top'
+                                }
+                            ],
+                            yAxis: [
+                                {
+                                name: 'Score',
+                                type: 'value'
+                                },
+                                {
+                                gridIndex: 1,
+                                name: 'HitRate',
+                                type: 'value',
+                                inverse: true,
+                                max:0.3,
+                                min:0.1
+                                }
+                            ],
+                            series: [
+                                {
+                                name: 'Score',
+                                type: 'line',
+                                symbolSize: 8,
+                                // prettier-ignore
+                                data: teamSumRBI 
+                                },
+                                {
+                                name: 'Hit Rate',
+                                type: 'line',
+                                xAxisIndex: 1,
+                                yAxisIndex: 1,
+                                symbolSize: 8,
+                                // prettier-ignore
+                                data:teamHitData
+                                }
+                            ]
+                            };
+                            option && myChart.setOption(option);
+                          }   
+                        </script>
+                        <script>
+                        function ViewTeams(team) {
+                          var yearSumRBI = [];
+                          var yearSumHit = [];
+                          var yearSumBats = [];
+                          var toShowYear = [];
+                          var yearHitData = [];
+                          
+                          var k = 0;
+                          if(team[team.length-1] ==" ")
+                          {
+                            team = team.substring(0,team.length-1);
+                          }
+
+                          for(let [year, batData] of teamData.get(team))
+                          {
+                              yearSumRBI[k] = batData[6];
+                              toShowYear[k] = year;
+                              yearHitData[k] = batData[3] / batData[2]
+                              k++;
+                          }
+                          showHitRate_RBI(yearHitData, yearSumRBI, toShowYear);
+                        }
+                        ViewTeams("ATL")
+                        </script>
+                      </body>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div class="col-lg-5">
+                <h1 data-caption-animate="fadeInUp" data-caption-delay="100"><br>打率-打点<br class="br-none">(队伍)</h1>
+                <p class="lead text-custom-blue" data-caption-animate="fadeInUp" data-caption-delay="250"></p>
+                <p class="text-introduce-chartsa-blue">
+                  左图按年份展现了MLB指定队伍的打击数据。<br>
+                  默认数据位亚特兰大勇士队(ATL)<br>
+                  上半部分为队伍在指定年份的总打点<br>
+                  下半部分为队伍在制定年份的打率<br>
+                  用户可以选择年份区间以及查看具体年份的具体数据。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Gift Voucher-->
+      <div class="section section section-xl bg-gray-150">
+        <div class="container wide">
+          <div class="row row-md-50 row-sm-50">
+            <div class="col-xs-10 col-md-6 col-lg-6 text-center">
+              <div class="width:100% ;heigh:100%">
+                <table width="100%" ;height="100%";border="0">
+                  <tr>
+                    <td id="msgg" style="width:100%;vertical-align:top;">
+                      <body style="height: 100%; margin: 0">
+                        <div id="container2" style="height:480px; width: 100%; vertical-align:top;"></div>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+                        <script type="text/javascript">
+                          function showDataChange(years,hit,LH,HR,SB,BB)
+                          {
+                            var dom = document.getElementById('container2');
+                            var myChart1 = echarts.init(dom,'dark',{
+                              renderer: 'canvas',
+                              useDirtyRect: false
+                            });
+                            
+                            option = {
+                              animationDuration: 10000,
+                              title: {
+                                text: '20123112\n孙梁梁'
+                              },
+                              tooltip: {
+                                trigger: 'axis'
+                              },
+                              legend: {
+                                data: ['Hit', 'Long Hit', 'Home Run', 'Steal Base', 'Bad Ball']
+                              },
+                              grid: {
+                                left: '3%',
+                                right: '4%',
+                                bottom: '3%',
+                                containLabel: true
+                              },
+                              toolbox: {
+                                feature: {
+                                  saveAsImage: {}
+                                }
+                              },
+                              xAxis: {
+                                type: 'category',
+                                boundaryGap: false,
+                                data: years
+                              },
+                              yAxis: {
+                                type: 'log'
+                              },
+                              series: [
+                                {
+                                  name: 'Hit',
+                                  type: 'line',
+                                  data: hit
+                                },
+                                {
+                                  name: 'Long Hit',
+                                  type: 'line',
+                                  data: LH
+                                },
+                                {
+                                  name: 'Home Run',
+                                  type: 'line',
+                                  data: HR
+                                },
+                                {
+                                  name: 'Steal Base',
+                                  type: 'line',
+                                  data: SB
+                                },
+                                {
+                                  name: 'Bad Ball',
+                                  type: 'line',
+                                  data: BB
+                                }
+                              ]
+                            };
+                            myChart1.setOption(option);
+                          }
+                        </script>
+
+                        <script type="text/javascript">
+                          function ViewDataChange(team) {
+                            var years = [];
+                            var hit = [];
+                            var LH = [];
+                            var HR =[];
+                            var SB = [];
+                            var BB =[];
+                            if(team[team.length-1] ==" ")
+                            {
+                              team = team.substring(0,team.length-1);
+                            }
+                            for(let [year, batData] of teamData.get(team))
+                            {
+                              years.push(year)
+                              hit.push(batData[3])
+                              LH.push(batData[4])
+                              HR.push(batData[5])
+                              SB.push(batData[7])
+                              BB.push(batData[8])
+                            }
+                            showDataChange(years,hit,LH,HR,SB,BB);
+                          }
+                          ViewDataChange("ATL")
+                        </script>
+                      </body>
+                    </td>
+                  </tr>
+                </table>
+                <div class="voucher-text">各项数据折线图</div>
+                <p>包括：安打、长打、本垒打、盗垒、四坏上垒数</p>
+              </div>
+            </div>
+            <div class="col-xs-10 col-md-6 col-lg-6 text-center">
+              <div class="width:100% ;heigh:100%">
+                <table width="100%" ;height="100%";border="0">
+                  <tr>
+                    <td id="msgg" style="width:100%;vertical-align:top;">
+                      <body style="height: 100%; margin: 0">
+                        <div id="container3" style="height:480px; width: 100%; vertical-align:top;"></div>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+                        <script type="text/javascript">
+                          function showGIDP(year,SBSum,hitSum,DPSum,maxHit)
+                          {
+                            var dom = document.getElementById('container3');
+                            var myChart1 = echarts.init(dom,'dark',{
+                              renderer: 'canvas',
+                              useDirtyRect: false
+                            });
+                            var app={};
+                            var option;
+                            option = {
+                              backgroundColor: '#2c343c',
+                              title:{
+                                text:"20123112 孙梁梁"
+                              },
+                              tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {
+                                  type: 'shadow'
+                                }
+                              },
+                              legend: {
+                                data: ['Steal Base', 'Double Play', 'Hit']
+                              },
+                              grid: {
+                                left: '3%',
+                                right: '4%',
+                                bottom: '3%',
+                                containLabel: true
+                              },
+                              xAxis: [
+                                {
+                                  type: 'value',
+                                  max:maxHit+10
+                                }
+                              ],
+                              yAxis: [
+                                {
+                                  type: 'category',
+                                  axisTick: {
+                                    show: false
+                                  },
+                                  data: year,
+                                }
+                              ],
+                              series: [
+                                {
+                                  name: 'Steal Base',
+                                  type: 'bar',
+                                  label: {
+                                    show: false,
+                                    position: 'inside'
+                                  },
+                                  emphasis: {
+                                    focus: 'series'
+                                  },
+                                  data: SBSum
+                                },
+                                {
+                                  name: 'Hit',
+                                  type: 'bar',
+                                  stack: 'T',
+                                  label: {
+                                    show: false
+                                  },
+                                  emphasis: {
+                                    focus: 'series'
+                                  },
+                                  data: hitSum
+                                },
+                                {
+                                  name: 'Double Play',
+                                  type: 'bar',
+                                  stack: 'T',
+                                  label: {
+                                    show: false,
+                                    position: 'left'
+                                  },
+                                  emphasis: {
+                                    focus: 'series'
+                                  },
+                                  data: DPSum
+                                }
+                              ]
+                            };
+                            option && myChart1.setOption(option);
+                          }
+                        </script>
+
+                        <script type="text/javascript">
+                          function ViewGIDP(team) {
+                            var yearData = []
+                            var SBSum = [],LHSum=[],DPSum=[];
+                            var k=0;
+                            var maxHit = 0;
+                            if(team[team.length-1] ==" ")
+                            {
+                              team = team.substring(0,team.length-1);
+                            }
+                            for(let [year, batData] of teamData.get(team))
+                            {
+                              if(parseInt(year) < 1990) continue
+                              yearData[k] = year
+                              SBSum[k]= batData[7];
+                              DPSum[k] = -batData[9];
+                              LHSum[k] = batData[3] /5;
+                              maxHit = Math.max(maxHit,LHSum[k])
+                              k++;
+                            }
+                            showGIDP(yearData,SBSum,LHSum,DPSum,maxHit);
+                          }
+                          ViewGIDP("ATL")
+                        </script>
+                      </body>
+                    </td>
+                  </tr>
+                </table>
+                <div class="voucher-text">双杀打-安打、盗垒数</div>
+                <p>为便于查看对数据进行了处理，真实安打数应为图上数据的五倍</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="snackbars" id="form-output-global"></div>
+    <script src="js/core.min.js"></script>
+    <script src="js/script.js"></script>
+    <!--coded by dyoma-->
+  </body>
+</html>

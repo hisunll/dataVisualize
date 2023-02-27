@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html class="wide wow-animation" lang="en">
+  <head>
+    <title>Home</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>.ie-panel{display: none;background: #212121;padding: 10px 0;box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3);clear: both;text-align:center;position: relative;z-index: 1;} html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel {display: block;}</style>
+  </head>
+  <body>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/xlsx/0.11.5/xlsx.core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="http://www.5imoban.net/download/jquery/jquery-1.11.0.min.js"></script>
+    <script src="http://www.5imoban.net/download/jquery/jquery.cookie.min.js"></script>
+    <script>
+      check = 0;
+      if(localStorage.getItem("key")!=null)
+      {
+        obj = JSON.parse(localStorage.getItem("key")); 
+        yearData = new Map();
+        for ([key, value] of Object.entries(obj)) {
+          var team = new Map()
+          for ( [key2, value2] of Object.entries(value)) {
+            team.set(key2,value2)
+          }
+          yearData.set(key,team)
+        }
+        obj = JSON.parse(localStorage.getItem("team")); 
+        teamData = new Map();
+        for ([key, value] of Object.entries(obj)) {
+          var check =1;
+          var year = new Map()
+          for ( [key2, value2] of Object.entries(value)) {
+            year.set(key2,value2)
+          }
+          teamData.set(key,year)
+        }
+        obj=undefined
+      }
+    </script>
+    <div class="ie-panel"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div>
+    <div class="preloader">
+      <div class="preloader-body">
+        <div class="cssload-container">
+          <div class="cssload-speeding-wheel"></div>
+        </div>
+        <p>Loading...</p>
+      </div>
+    </div>
+    <div class="page">
+      <header class="section page-header">
+        <!--RD Navbar-->
+        <div class="rd-navbar-wrap">
+          <nav class="rd-navbar rd-navbar-classic" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-static" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-lg-stick-up-offset="46px" data-xl-stick-up-offset="46px" data-xxl-stick-up-offset="46px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
+            <div class="rd-navbar-main-outer">
+              <div class="rd-navbar-main">
+                <!--RD Navbar Panel-->
+                <div class="rd-navbar-panel">
+                  <!--RD Navbar Toggle-->
+                  <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
+                  <!--RD Navbar Brand-->
+                  <div class="rd-navbar-brand">
+                    <!--Brand--><a class="brand" href="index.html"><img class="brand-logo-dark" src="images/logo-default-428x112.png" alt="" width="214" height="56"/><img class="brand-logo-light" src="images/logo-inverse-430x112.png" alt="" width="215" height="56"/></a>
+                  </div>
+                </div>
+                <div class="rd-navbar-main-element">
+                  <div class="rd-navbar-nav-wrap">
+                    <ul class="rd-navbar-nav">
+                      <li class="rd-nav-item">
+                        <a class="rd-nav-link" href="index.html"onclick="as2()">Home</a>
+                        <script>
+                          function as2()
+                          {
+                            window.location.href = 'index.html';
+                          }
+                        </script>
+                      </li>
+                      <li class="rd-nav-item"><a class="rd-nav-link" href="team.html"onclick="as3()">Team</a>
+                        <script>
+                          function as3()
+                          {
+                            window.location.href = 'team.html';
+                          }
+                        </script>
+                      </li>
+                      <li class="rd-nav-item">
+                        <a class="rd-nav-link" href="year.html" onclick="as()">Year</a>
+                        <script>
+                          function as()
+                          {
+                            window.location.href = 'year.html';
+                          }
+                        </script>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="rd-nav-item">
+                  <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+                  <script src="https://cdn.bootcss.com/xlsx/0.11.5/xlsx.core.min.js"></script>
+                  <script src="http://www.5imoban.net/download/jquery/jquery-1.11.0.min.js"></script>
+                  <script src="http://www.5imoban.net/download/jquery/jquery.cookie.min.js"></script>
+                  <input style="float: left; position: relative; left: 65% " type="file" id="excel-file">
+                  <script>
+                    //给input标签绑定change事件，一上传选中的.xls文件就会触发该函数
+                    $('#excel-file').change(function (e) {
+                      Data = new Map();
+                      DataKey = [];
+                      yearKey = [];
+                      teamKey = [];
+                      yearData = new Map();
+                      teamData = new Map();
+                      var files = e.target.files;
+                      var fileReader = new FileReader();
+                        
+                      fileReader.onload = function (ev) {
+                        try {
+                          var data = ev.target.result
+                          var workbook = XLSX.read(data, {
+                            type: 'binary'
+                          }) // 以二进制流方式读取得到整份excel表格对象
+                            persons = []; // 存储获取到的数据
+                        } 
+                        catch (e) {
+                          console.log('文件类型不正确');
+                          return;
+                        }
+                          // 表格的表格范围，可用于判断表头是否数量是否正确
+                        var fromTo = '';
+                        // 遍历每张表读取
+                        for (var sheet in workbook.Sheets) {
+                          if (workbook.Sheets.hasOwnProperty(sheet)) {
+                            fromTo = workbook.Sheets[sheet]['!ref'];
+                            persons = persons.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
+                            break; 
+                          }
+                        }
+                          //在控制台打印出来表格中的数据
+                        for (let i = 0; i < persons.length; i++) {
+                          var playerID = persons[i]['playerID'];
+                          var yearID = persons[i]['yearID'];
+                          //console.log(time);
+                          if (!DataKey.includes(playerID)) {
+                            DataKey.push(playerID);
+                            var year = new Map();
+                            year.set(yearID, []);
+                            Data.set(playerID, year);
+                          }
+                          else{
+                            if(!Data.get(playerID).get(yearID))
+                               Data.get(playerID).set(yearID, []);
+                          }
+                          Data.get(playerID).get(yearID).push([
+                            persons[i]['teamID'],
+                            persons[i]['lgID'],
+                            persons[i]['G'],
+                            persons[i]['AB'],
+                            persons[i]['H'],
+                            persons[i]['2B'] + persons[i]['3B'],
+                            persons[i]['HR'],
+                            persons[i]['RBI'],
+                            persons[i]['SB'],
+                            persons[i]['BB'],
+                            persons[i]['GIDP'],
+                            persons[i]['SH'] + persons[i]['SF']
+                          ]);
+                          teamID = persons[i]['teamID'];
+                          if(!teamKey.includes(teamID) && yearID == "2015"){
+                            teamKey.push(teamID);
+                          }
+                          if (!yearKey.includes(yearID))
+                          {
+                            yearKey.push(yearID);
+                            var team = new Map();
+                            team.set(teamID, []);
+                            yearData.set(yearID, team);
+                          }
+                          else
+                            if(!yearData.get(yearID).get(teamID))
+                              yearData.get(yearID).set(teamID, []);
+                              yearData.get(yearID).get(teamID).push([
+                                persons[i]['playerID'],
+                                persons[i]['lgID'],
+                                persons[i]['G'],
+                                persons[i]['AB'],
+                                persons[i]['H'],
+                                parseInt(persons[i]['2B']) + parseInt(persons[i]['3B']),
+                                persons[i]['HR'],
+                                persons[i]['RBI'],
+                                persons[i]['SB'],
+                                persons[i]['BB'],
+                                persons[i]['GIDP'],
+                                persons[i]['SH'] + persons[i]['SF']
+                              ]);
+                            }
+                        teamKey.sort();
+                        teamK = ['AL','NL',...teamKey];
+                        for (let i = 0; i < persons.length; i++) {
+                          var teamID = persons[i]['teamID'];
+                          var yearID = persons[i]['yearID'];
+                          var lgID = persons[i]['lgID'];
+                          if (teamKey.includes(teamID) && !teamData.get(teamID)) {
+                            var year = new Map();
+                            year.set(yearID, []);
+                            teamData.set(teamID, year);
+                          }
+                          else
+                            if(teamKey.includes(teamID) && !teamData.get(teamID).get(yearID))
+                              teamData.get(teamID).set(yearID, []);
+                          if(!teamData.get(lgID)){
+                            var year = new Map();
+                            year.set(yearID, []);
+                            teamData.set(lgID, year);
+                          }
+                          else
+                            if(!teamData.get(lgID).get(yearID))
+                              teamData.get(lgID).set(yearID, []);
+                          if(teamKey.includes(teamID) ){
+                            teamData.get(teamID).get(yearID).push([
+                              persons[i]['playerID'],
+                              persons[i]['lgID'],
+                              persons[i]['G'],
+                              persons[i]['AB'],
+                              persons[i]['H'],
+                              parseInt(persons[i]['2B']) + parseInt(persons[i]['3B']),
+                              persons[i]['HR'],
+                              persons[i]['RBI'],
+                              persons[i]['SB'],
+                              persons[i]['BB'],
+                              persons[i]['GIDP'],
+                              persons[i]['SH'] + persons[i]['SF']
+                           ]);
+                          }
+                          teamData.get(lgID).get(yearID).push([
+                            persons[i]['playerID'],
+                            persons[i]['teamID'],
+                            persons[i]['G'],
+                            persons[i]['AB'],
+                            persons[i]['H'],
+                            parseInt(persons[i]['2B']) + parseInt(persons[i]['3B']),
+                            persons[i]['HR'],
+                            persons[i]['RBI'],
+                            persons[i]['SB'],
+                            persons[i]['BB'],
+                            persons[i]['GIDP'],
+                            persons[i]['SH'] + persons[i]['SF']
+                          ]);
+                        }
+                        ViewTeams(document.getElementById("teams"));
+                        ViewDay(document.getElementById("years"));
+                        ViewTeams(document.getElementById("teams"))
+                        sendYearData();
+                        sendTeamData();
+                      };
+                      
+                          // 以二进制方式打开文件
+                      fileReader.readAsBinaryString(files[0]);
+                    });
+                    function sendYearData()
+                    {
+                      var obj = new Object();
+                      yearData.forEach((item, key, yearData) => {
+                        var obj2=new Object();
+                        item.forEach((item2,key2,item) => {
+                          obj2[key2]=item2
+                        })
+                        obj[key]=obj2
+                      })
+                      var setData = JSON.stringify(obj);
+                      localStorage.setItem("key",setData);
+                    }
+                    function sendTeamData()
+                    {
+                      var obj = new Object();
+                      var toSendTeam = new Map();
+                      for(let [teamName, yearBatData] of teamData){
+                        var temp = new Map();
+                        if(teamName == "AL" || teamName == "NL")
+                        {
+                          continue;
+                        }
+                        
+                        for(let [year, batData] of yearBatData)
+                        {
+                          var toSendTeamData = [];
+                          toSendTeamData[0] = batData[0][1];
+                          for(let i=1;i<11;i++)
+                          {
+                            toSendTeamData[i]=0;
+                          }
+                          for(let i=0;i<batData.length;i++)
+                          {
+                            for(let j=1;j<11;j++){
+                              if(i!= 4)
+                              {
+                                toSendTeamData[j] = parseInt(toSendTeamData[j]) +parseInt(batData[i][j+1]);
+                              }
+                              else{
+                                toSendTeamData[j] = parseInt(toSendTeamData[j]) +batData[i][j+1];
+                              }
+                            }
+                          }
+                          temp.set(year,toSendTeamData);
+                        }
+                        toSendTeam.set(teamName, temp);
+                      }
+                      teamData = toSendTeam;
+                      toSendTeam.forEach((item, key, toSendTeam) => {
+                        var obj2=new Object();
+                        item.forEach((item2,key2,item) => {
+                          obj2[key2]=item2
+                        })
+                        obj[key]=obj2
+                      })
+                      var setData2 = JSON.stringify(obj);
+                      localStorage.setItem("team",setData2);
+                    }
+                  </script>
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </header>
+      <!--Main bunner-->
+      <div >
+        <div class="text-center">
+          <h2 class="title">MLB打击数据</h2>
+            <div class="subtitle-box-text">Developed by: 20123112 孙梁梁</div>
+          </div>
+        </div>
+      <div class="section section-main-bunner context-dark" id="home">
+        <div class="main-bunner-img bg-overlay-1;margin=0;background-color:#000000">
+          <div class="container wide">
+            <div class="row justify-content-left">
+              <div class="col-lg-5">
+                <h1 data-caption-animate="fadeInUp" data-caption-delay="100">MLB<br class="br-none"> 打击数据<br class="br-none">(年份)</h1>
+                <p class="lead text-custom-blue" data-caption-animate="fadeInUp" data-caption-delay="250"></p>
+                <p class="text-introduce-chartsa-blue">
+                  右图分别按国家联盟和美国联盟使用散点图展现了2015年MLB运动员的“安打-打席”数据。<br>
+                  通过该图可以球员打率的分布和平均值以及其他信息。<br>
+                  用户可以对图进行放大和数据的选择性展示。<br>
+                </p>
+                <div class="linear-introduce">
+                  <div class="linear-introduce-title"><h2 style="font-size:30px"><br>辅助线</h2></div>
+                </div>
+                <p class="text-linear-introduce">实线：数据线性回归后的结果<br>
+                  虚线：安打与打席的平均值
+                </p>
+              </div>
+              <div class="col-lg-7">
+                <table width="100%" ;height="100%";border="0">
+                  <tr>
+                    <td id="msgg" style="width:100%;vertical-align:top;">
+                        <body style="height: 100%; margin: 0">
+                          <div id="container" style="height:585px; width: 100%; vertical-align:top;"></div>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+                        <script type="text/javascript">
+                          //import Vue from 'vue'
+                          //import * as echarts from 'echarts'
+                          //import * as esStat from 'echarts-stat'
+                          var dom = document.getElementById('container');
+                          var myChart = echarts.init(dom,{
+                            renderer: 'canvas',
+                            useDirtyRect: false
+                          });
+                          echarts.registerTransform(ecStat.transform.regression);
+                          function showHitRate(lgHitData) 
+                          {
+                            var app = {};
+                            var option;
+                            var dataArr = [];
+                            for (let i=0;i<lgHitData.get("AL").length;i++)
+                            {
+                              dataArr.push(lgHitData.get("AL")[i].map(Number));
+                            }
+
+                            var dataArr2 = [];
+                            for (let i=0;i<lgHitData.get("NL").length;i++)
+                            {
+                              dataArr2.push(lgHitData.get("NL")[i].map(Number));
+                            }
+                            option = {
+                              dataset:[
+                                {
+                                  source:
+                                    dataArr
+                                },
+                                {
+                                  source:
+                                    dataArr2
+                                },
+                                {
+                                  transform:
+                                  {
+                                    type: 'ecStat:regression'
+                                  }
+                                },
+                                {
+                                  fromDatasetIndex:1,
+                                  transform:
+                                  {
+                                    type: 'ecStat:regression'
+                                  }
+                                }
+                              ],
+                              title: {
+                                text: 'Player Hit Rate (Year): Hit Num / At Bats',
+                                subtext: 'Data from: 20123112 sll',
+                                left: 'center'
+                              },
+                              grid: {
+                                left: '3%',
+                                right: '7%',
+                                bottom: '7%',
+                                containLabel: true
+                              },
+                              tooltip: {
+                                showDelay: 0,
+                                formatter: function (params) {
+                                  if (params.value.length > 1) {
+                                    return (
+                                      params.seriesName +
+                                      ' :<br/>' +
+                                      params.value[0] +
+                                      'Bats ' +
+                                      params.value[1] +
+                                      'Times '
+                                    );
+                                  } 
+                                  else {
+                                    return (
+                                      params.seriesName +
+                                      ' :<br/>' +
+                                      params.name +
+                                      ' : ' +
+                                      params.value +
+                                      'Times '
+                                    );
+                                  }
+                                },
+                                axisPointer: {
+                                  show: true,
+                                  type: 'cross',
+                                  lineStyle: {
+                                    type: 'dashed',
+                                    width: 1
+                                  }
+                                }
+                              },
+                              toolbox: {
+                                feature: {
+                                  dataZoom: {},
+                                  brush: {
+                                    type: ['rect', 'polygon', 'clear']
+                                  }
+                                }
+                              },
+                              brush: {},
+                              legend: {
+                                bottom: 10
+                              },
+                              xAxis: [
+                                {
+                                  type: 'value',
+                                  scale: true,
+                                  axisLabel: {
+                                    formatter: '{value} Bats'
+                                  },
+                                  splitLine: {
+                                    show: false
+                                  }
+                                }
+                              ],
+                              yAxis: [
+                                {
+                                  type: 'value',
+                                  scale: true,
+                                  axisLabel: {
+                                    formatter: '{value} Times'
+                                  },
+                                  splitLine: {
+                                    show: false
+                                  }
+                                }
+                              ],
+                              series: [
+                                {
+                                  name: 'American League',
+                                  type: 'scatter',
+                                  emphasis: {
+                                    focus: 'series'
+                                  },
+                                  data: lgHitData.get("AL")
+                                },
+                                {
+                                  name: 'AL Regression Line',
+                                  type: 'line',
+                                  emphasis: {
+                                    focus: 'series'
+                                  },
+                                  datasetIndex: 2,
+                                  symbolSize: 0.1,
+                                  symbol: 'circle',
+                                  label: { show: true, fontSize: 10 },
+                                  labelLayout: { dx: -20 },
+                                  encode: { label: 2, tooltip: 1 },
+                                  markLine:{
+                                    data:[
+                                      {type:'average',name:'平均安打（AL）'},
+                                      {type:'average',name:'平均打席（AL）',valueDim:'x'}
+                                    ]
+                                  }
+                                },
+                                {
+                                  name: 'National League',
+                                  type: 'scatter',
+                                  emphasis: {
+                                    focus: 'series'
+                                  },
+                                  // prettier-ignore
+                                  data: lgHitData.get("NL"),
+                                  markLine:{
+                                    data:[
+                                      {type:'average',name:'平均安打（NL）'}
+                                      ,{type:'average',name:'平均打席（NL）',valueDim:'x'}
+                                    ]
+                                  }
+                                },
+                                {
+                                  name: 'NL Regression Line',
+                                  type: 'line',
+                                  datasetIndex:3,
+                                  symbolSize: 0.1,
+                                  symbol: 'circle',
+                                  label: { show: true, fontSize: 10 },
+                                  labelLayout: { dx: -20 },
+                                  encode: { label: 2, tooltip: 1 },
+                                    
+                                }
+                              ]
+                            };
+                            if (option && typeof option === 'object') {
+                              myChart.setOption(option);
+                            }
+                          }   
+                        </script>
+                        <script type="text/javascript">
+                          var nianfen = '2015';
+                          function ViewDay(obj) {
+                            var year = '2015';
+                            nianfen = year
+                            var lgSumHR = []
+                            var maxHit = 0;
+                            var lgHitData = new Map();
+                            lgHitData.set("NL", []);
+                            lgHitData.set("AL", [])
+                            for(let [team, batData] of yearData.get(nianfen))
+                            {
+                              for(let i = 0; i < batData.length; i++)
+                              {
+                                var hitNum = batData[i][4];
+                                var atBatNum = batData[i][3];
+                                var teamLg = batData[i][1];
+                                lgHitData.get(teamLg).push([atBatNum, hitNum]);
+                              }
+                            }
+                            showHitRate(lgHitData);
+                          }
+                          ViewDay("2015")
+                        </script>
+                      </body>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div >
+      <div class="section section-main-bunner context-dark" id="home">
+        <div class="main-bunner-img bg-overlay-1;margin=0;background-color:#000000">
+          <div class="container wide">
+            <div class="row justify-content-left">
+              <div class="col-lg-7">
+                <table width="100%" ;height="100%";border="0">
+                  <tr>
+                    <td id="msgg" style="width:100%;vertical-align:top;">
+                        <body style="height: 100%; margin: 0">
+                          <div id="container2" style="height:590px; width: 100%; vertical-align:top;"></div>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+                        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+                        <script type="text/javascript">
+                          //import Vue from 'vue'
+                          //import * as echarts from 'echarts'
+                          //import * as esStat from 'echarts-stat'
+                          echarts.registerTransform(ecStat.transform.regression);
+                          function showHitRate_RBI(teamHitData,teamSumRBI,toShowYear)
+                          {
+                            var dom = document.getElementById('container2');
+                            var myChart = echarts.init(dom, 'dark', {
+                            renderer: 'canvas',
+                            useDirtyRect: false
+                            });
+                            var app = {};
+                            
+                            var option;
+
+                            // prettier-ignore
+                            let timeData = toShowYear;
+                            option = {
+                            title: {
+                                text: 'RBI vs Hit Rate (Team)\n20123112孙梁梁',
+                                left: 'center'
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {
+                                animation: false
+                                }
+                            },
+                            legend: {
+                                data: ['RBI', 'Hit Rate'],
+                                left: 10
+                            },
+                            toolbox: {
+                                feature: {
+                                dataZoom: {
+                                    yAxisIndex: 'none'
+                                },
+                                restore: {},
+                                saveAsImage: {}
+                                }
+                            },
+                            axisPointer: {
+                                link: [
+                                {
+                                    xAxisIndex: 'all'
+                                }
+                                ]
+                            },
+                            dataZoom: [
+                                {
+                                show: true,
+                                realtime: true,
+                                start: 30,
+                                end: 70,
+                                xAxisIndex: [0, 1]
+                                },
+                                {
+                                type: 'inside',
+                                realtime: true,
+                                start: 30,
+                                end: 70,
+                                xAxisIndex: [0, 1]
+                                }
+                            ],
+                            grid: [
+                                {
+                                left: 60,
+                                right: 50,
+                                height: '35%'
+                                },
+                                {
+                                left: 60,
+                                right: 50,
+                                top: '55%',
+                                height: '35%'
+                                }
+                            ],
+                            xAxis: [
+                                {
+                                type: 'category',
+                                boundaryGap: false,
+                                axisLine: { onZero: true },
+                                data: timeData
+                                },
+                                {
+                                gridIndex: 1,
+                                type: 'category',
+                                boundaryGap: false,
+                                axisLine: { onZero: true },
+                                data: timeData,
+                                position: 'top'
+                                }
+                            ],
+                            yAxis: [
+                                {
+                                name: 'Score',
+                                type: 'value'
+                                },
+                                {
+                                gridIndex: 1,
+                                name: 'HitRate',
+                                type: 'value',
+                                inverse: true,
+                                max:0.3,
+                                min:0.15
+                                }
+                            ],
+                            series: [
+                                {
+                                name: 'Score',
+                                type: 'line',
+                                symbolSize: 8,
+                                // prettier-ignore
+                                data: teamSumRBI 
+                                },
+                                {
+                                name: 'Hit Rate',
+                                type: 'line',
+                                xAxisIndex: 1,
+                                yAxisIndex: 1,
+                                symbolSize: 8,
+                                // prettier-ignore
+                                data:teamHitData
+                                }
+                            ]
+                            };
+                            option && myChart.setOption(option);
+                          }   
+                        </script>
+                        <script>
+                        function ViewTeams(team) {
+                          var yearSumRBI = [];
+                          var yearSumHit = [];
+                          var yearSumBats = [];
+                          var toShowYear = [];
+                          var yearHitData = [];
+                          
+                          var k = 0;
+                          for(let [year, batData] of teamData.get(team))
+                          {
+                              yearSumRBI[k] = batData[6];
+                              toShowYear[k] = year;
+                              yearHitData[k] = batData[3] / batData[2]
+                              k++;
+                          }
+                          showHitRate_RBI(yearHitData, yearSumRBI, toShowYear);
+                        }
+                        ViewTeams("ATL")
+                        </script>
+                      </body>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div class="col-lg-5">
+                <h1 data-caption-animate="fadeInUp" data-caption-delay="100"><br>MLB<br class="br-none">打击数据<br class="br-none">(队伍)</h1>
+                <p class="lead text-custom-blue" data-caption-animate="fadeInUp" data-caption-delay="250"></p>
+                <p class="text-introduce-chartsa-blue">
+                  左图按年份展现了MLB亚特兰大勇士队(ATL)的打击数据。<br>
+                  上半部分为ATL在指定年份的总打点<br>
+                  下半部分为ATL在制定年份的打率<br>
+                  用户可以选择年份区间以及查看具体年份的具体数据。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="snackbars" id="form-output-global"></div>
+    <script src="js/core.min.js"></script>
+    <script src="js/script.js"></script>
+    <!--coded by dyoma-->
+  </body>
+</html>
