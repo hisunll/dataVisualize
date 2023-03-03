@@ -251,9 +251,8 @@
                             persons[i]['SH'] + persons[i]['SF']
                           ]);
                         }
-                        ViewTeams(document.getElementById("teams"));
-                        ViewDay(document.getElementById("years"));
-                        ViewTeams(document.getElementById("teams"))
+                        ViewTeams("ATL");
+                        ViewDay("2015");
                         sendYearData();
                         sendTeamData();
                       };
@@ -734,7 +733,7 @@
                           var yearSumBats = [];
                           var toShowYear = [];
                           var yearHitData = [];
-                          
+                          console.log(team+" "+team)
                           var k = 0;
                           for(let [year, batData] of teamData.get(team))
                           {
